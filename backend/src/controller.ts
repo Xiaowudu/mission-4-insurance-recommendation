@@ -13,10 +13,15 @@ export const startChat = async (req: Request, res: Response) => {
     const chatId = Date.now().toString();
     contentsStore.set(chatId, contents);
 
+    try {
     const reply = await answerQuestion(contents, `Hello, I am looking for car insurance. Can you help me?`);
 
     console.log(contents);
     res.status(200).json({ chatId, reply });
+    } catch (error) {       
+        console.error('Error in startChat:', error);    
+        res.status(500).send(error instanceof Error ? error.message : 'An unknown error occurred');
+    }
 }
 
 export const replyChat = async (req: Request, res: Response) => {
@@ -32,8 +37,13 @@ export const replyChat = async (req: Request, res: Response) => {
         return;
     }
 
+    try {
     const reply = await answerQuestion(contents, answer);
 
     console.log(contents);
     res.status(200).json({ reply });
+    } catch (error) {       
+        console.error('Error in replyChat:', error);    
+        res.status(500).send(error instanceof Error ? error.message : 'An unknown error occurred');
+    }
 }
