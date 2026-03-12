@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 const UserInput: React.FC<{ onChange: (input: string) => void , input: string }> = ({ onChange, input }) => {
   return (

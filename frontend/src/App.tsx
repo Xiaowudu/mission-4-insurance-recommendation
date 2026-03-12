@@ -17,26 +17,32 @@ function App() {
   };
 
   const handleStart = async () => {
-    setLoading(true);
-    const response = await fetch(`${API_BASE_URL}/start-chat`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if(!response.ok) {
-      console.error('Failed to start chat:', response.statusText);
-      const errorMessage = await response.text();
-      setChatHistory([...chatHistory, "Tina: " + errorMessage]);
-      setLoading(false);
-      return;
-    }
+    try{
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/start-chat`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if(!response.ok) {
+        console.error('Failed to start chat:', response.statusText);
+        const errorMessage = await response.text();
+        setChatHistory([...chatHistory, "Tina: " + errorMessage]);
+        setLoading(false);
+        return;
+      }
     
-    const data = await response.json();
-    setChatId(data.chatId);
-    console.log("Chat ID:", data.chatId);
-    setChatHistory([...chatHistory, "Tina: " + data.reply]);
-    setLoading(false);
+      const data = await response.json();
+      setChatId(data.chatId);
+      console.log("Chat ID:", data.chatId);
+      setChatHistory([...chatHistory, "Tina: " + data.reply]);
+      setLoading(false);
+    }catch(error) {
+      console.error('Error starting chat:', error);
+      setChatHistory([...chatHistory, "Tina: An error occurred while starting the chat. Please try again later."]);
+      setLoading(false);
+    }
   }
 
   const handleSubmit = async () => {
