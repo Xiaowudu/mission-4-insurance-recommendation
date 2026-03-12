@@ -12,6 +12,11 @@ Deployment: Docker Containers
 
 
 ## Installation
+Create a .env file in backend:
+```bash
+GEMINI_API_KEY="your gemini api key"
+PORT=5001
+```
 
 Docker build:
 
