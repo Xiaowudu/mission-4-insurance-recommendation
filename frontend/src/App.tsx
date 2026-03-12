@@ -46,25 +46,31 @@ function App() {
   }
 
   const handleSubmit = async () => {
-    setLoading(true);
-    const response = await fetch(`${API_BASE_URL}/reply-chat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ answer: input, chatId }),
-    });
-    if(!response.ok) {
-      console.error('Failed to reply chat:', response.statusText);
-      const errorMessage = await response.text();
-      setChatHistory([...chatHistory, "Tina: " + errorMessage]);
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/reply-chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ answer: input, chatId }),
+      });
+      if(!response.ok) {
+        console.error('Failed to reply chat:', response.statusText);
+        const errorMessage = await response.text();
+        setChatHistory([...chatHistory, "Tina: " + errorMessage]);
+        setLoading(false);
+        return;
+      }
+      const data = await response.json();
+      setChatHistory([...chatHistory, "Me: " + input, "Tina: " + data.reply]);
+      setInput("");
       setLoading(false);
-      return;
+    } catch (error) {
+      console.error('Error replying to chat:', error);
+      setChatHistory([...chatHistory, "Tina: An error occurred while sending your message. Please try again later."]);
+      setLoading(false);
     }
-    const data = await response.json();
-    setChatHistory([...chatHistory, "Me: " + input, "Tina: " + data.reply]);
-    setInput("");
-    setLoading(false);
   }
 
   useEffect(() => {
