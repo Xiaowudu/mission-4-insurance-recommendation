@@ -1,5 +1,5 @@
 import { type Request, type Response } from "express";
-import {answerQuestion} from './gemini.service.ts';
+import {answerQuestion} from './gemini.service.js';
 
 const contentsStore: Map<string, any> = new Map();
 
