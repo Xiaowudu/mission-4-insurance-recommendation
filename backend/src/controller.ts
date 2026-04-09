@@ -1,7 +1,11 @@
 import { type Request, type Response } from "express";
 import {answerQuestion} from './gemini.service.js';
+import {LRUCache} from "lru-cache";
 
-const contentsStore: Map<string, any> = new Map();
+const contentsStore = new LRUCache<string, any>({
+    max: 100,
+    ttl: 1000 * 60 * 60 // 1 hour
+});
 
 export const index = (req: Request, res: Response) => {
     res.send('API is running! 🚀');
